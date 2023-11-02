@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Socket.IO Client</title>
+</head>
+<body>
+    <h1>Socket.IO Client</h1>
+    <div id="messages"></div>
+    <input type="text" id="message" placeholder="Type your message">
+    <button id="send">Send</button>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script>
+        const socket = io('http://localhost:8080'); // Thay đổi URL và cổng theo máy chủ của bạn
+
+        const messagesDiv = document.getElementById('messages');
+        const messageInput = document.getElementById('message');
+        const sendButton = document.getElementById('send');
+
+        sendButton.addEventListener('click', () => {
+            const messageText = messageInput.value;
+            messageInput.value = '';
+            socket.emit('sendMessage', messageText);
+        });
+
+        socket.on('newMessage', (message) => {
+            const messageElement = document.createElement('div');
+            messageElement.textContent = message;
+            messagesDiv.appendChild(messageElement);
+        });
+
+        socket.on('connect', () => {
+            console.log('Connected to the server');
+        });
+
+        socket.on('disconnect', () => {
+            console.log('Disconnected from the server');
+        });
+    </script>
+</body>
+</html>
